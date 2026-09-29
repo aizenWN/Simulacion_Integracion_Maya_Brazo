@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- brief Gazebo plugins for skid steer drive and joint state bridge -->
+
+  <gazebo>
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <!-- DiffDrive left/right are relative to the navigation frame.
+           base_link is rotated +90 deg under base_footprint, so CAD *_right
+           joints are nav-left and CAD *_left joints are nav-right. Keep this
+           mapping aligned with observed /cmd_vel yaw sign. -->
+      <left_joint>front_right_joint</left_joint>
+      <left_joint>back_right_joint</left_joint>
+
+      <right_joint>front_left_joint</right_joint>
+      <right_joint>back_left_joint</right_joint>
+
+      <!-- Frames consistent with ROS navigation stack -->
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_footprint</child_frame_id>
+      <odom_topic>/model/maya/odometry</odom_topic>
+      <tf_topic>/model/maya/tf</tf_topic>
+
+      <!-- Drive parameters pulled from common properties -->
+      <wheel_separation>${drive_wheel_separation}</wheel_separation>
+      <wheel_radius>${drive_wheel_radius}</wheel_radius>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+    </plugin>
+  </gazebo>
+
+  <!-- High-traction compacted sandy desert contact. This is still a rigid-plane
+       approximation, not deformable sand/sinkage, but it reduces the excessive
+       sliding seen during square-test tuning. -->
+  <gazebo reference="front_left">
+    <mu1>20.0</mu1>
+    <mu2>20.0</mu2>
+    <slip1>0.00001</slip1>
+    <slip2>0.00001</slip2>
+  </gazebo>
+
+  <gazebo reference="back_left">
+    <mu1>20.0</mu1>
+    <mu2>20.0</mu2>
+    <slip1>0.00001</slip1>
+    <slip2>0.00001</slip2>
+  </gazebo>
+
+  <gazebo reference="front_right">
+    <mu1>20.0</mu1>
+    <mu2>20.0</mu2>
+    <slip1>0.00001</slip1>
+    <slip2>0.00001</slip2>
+  </gazebo>
+
+  <gazebo reference="back_right">
+    <mu1>20.0</mu1>
+    <mu2>20.0</mu2>
+    <slip1>0.00001</slip1>
+    <slip2>0.00001</slip2>
+  </gazebo>
+
+
+
+  <gazebo>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+    </plugin>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+
+</robot>

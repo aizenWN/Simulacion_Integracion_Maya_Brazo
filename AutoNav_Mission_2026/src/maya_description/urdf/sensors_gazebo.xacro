@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- IMU Sensor Plugin -->
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
+      <!-- Approximate BNO055 fused output-rate regime; using 50 Hz for current SIM tuning. -->
+      <update_rate>50</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <!-- Force ROS/GZ IMU messages to use the URDF IMU frame instead of a scoped sensor name. -->
+      <gz_frame_id>imu_link</gz_frame_id>
+      <imu>
+        <angular_velocity>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <!-- BNO055 gyro noise is much higher than this idealized value; use a practical rad/s approximation. -->
+              <stddev>0.003</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.003</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.003</stddev>
+            </noise>
+          </z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <!-- BNO055 accel noise density (~190 ug/sqrtHz) at ~62.5 Hz BW is roughly O(0.01 m/s^2) RMS. -->
+              <stddev>0.015</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.015</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.015</stddev>
+            </noise>
+          </z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- LiDAR Sensor Plugin -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <topic>scan</topic>
+      <gz_frame_id>lidar_link</gz_frame_id>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>450</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14</min_angle>
+            <max_angle>3.14</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>0.01</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.03</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+    </sensor>
+  </gazebo>
+
+  <!-- Depth Camera Sensor -->
+  <gazebo reference="camera_link">
+    <sensor name="rgb_camera" type="camera">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>30.0</update_rate>
+      <topic>rgb_camera/image</topic>
+      <gz_frame_id>camera_link</gz_frame_id>
+      <camera name="rgb_camera">
+        <horizontal_fov>1.047198</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>20.0</far>
+        </clip>
+      </camera>
+    </sensor>
+
+    <sensor name="depth_camera" type="depth">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>60.0</update_rate>
+      <topic>depth_camera</topic>
+      <gz_frame_id>camera_link</gz_frame_id>
+      <camera name="camera">
+        <horizontal_fov>1.047198</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R_FLOAT32</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>3.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+</robot>

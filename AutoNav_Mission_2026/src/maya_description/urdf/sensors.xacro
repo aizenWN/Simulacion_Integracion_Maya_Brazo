@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find maya_description)/urdf/sensors_frames.xacro"/>
+  <xacro:include filename="$(find maya_description)/urdf/sensors_gazebo.xacro"/>
+
+</robot>

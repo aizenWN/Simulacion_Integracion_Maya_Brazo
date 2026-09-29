@@ -1,0 +1,11 @@
+ekf_filter_node:
+  ros__parameters:
+    # Visual odometry is optional and fused as a secondary odom source.
+    odom1: /visual_odom
+    odom1_config: [true,  true,  false,
+                   false, false, true,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom1_differential: false
+    odom1_relative: false

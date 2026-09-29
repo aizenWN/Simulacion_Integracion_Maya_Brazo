@@ -1,0 +1,12 @@
+ekf_filter_node:
+  ros__parameters:
+    # LIO is optional and fused as an additional odom source.
+    # Keep the topic overridable from launch so different LIO packages can plug in.
+    odom2: /lio/odom
+    odom2_config: [true,  true,  false,
+                   false, false, true,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom2_differential: false
+    odom2_relative: false

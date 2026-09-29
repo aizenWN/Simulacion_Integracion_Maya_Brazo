@@ -1,0 +1,140 @@
+<launch>
+    <!-- Heightmap world is more stable on ogre; allow override via args -->
+    <arg name="render_engine" default="ogre2" />
+    <arg name="render_engine_gui" default="ogre2" />
+    <set_env name="GZ_RENDER_ENGINE" value="$(var render_engine)" />
+    <set_env name="IGN_RENDER_ENGINE" value="$(var render_engine)" />
+    <set_env name="GZ_SIM_RESOURCE_PATH" value="$(find-pkg-share maya_bringup)/world:$(find-pkg-prefix maya_description)/share" />
+    <set_env name="IGN_GAZEBO_RESOURCE_PATH" value="$(find-pkg-share maya_bringup)/world:$(find-pkg-prefix maya_description)/share" />
+    <!-- Use default physics engine (ODE via gz-physics-dartsim fallback) unless overridden -->
+    <arg name="world" default="random_world.sdf" />
+    <arg name="gz_args" default="$(var world) --render-engine $(var render_engine) --render-engine-gui $(var render_engine_gui) -r" />
+    <arg name="spawn_x" default="4.5" />
+    <arg name="spawn_y" default="2.0" />
+    <arg name="spawn_z" default="0.25" />
+    <arg name="spawn_yaw" default="0.0" />
+    <arg name="rviz" default="true" />
+    <!-- Allow motion/estimation-only tests, e.g. square_test.py, without starting SLAM/Nav2. -->
+    <arg name="use_nav2" default="true" />
+    <!-- Optional depth->scan helper pipeline; disable to isolate lidar-only baseline behavior. -->
+    <arg name="use_depth_scan_pipeline" default="false" />
+    <!-- Optional RTAB-Map RGB-D odometry publisher for /visual_odom (used by EKF odom1). -->
+    <arg name="use_rtabmap_odom" default="false" />
+    <let name="gazebo_config_path" value="$(find-pkg-share maya_bringup)/config/gazebo_bridge.yaml" />
+    <let name="urdf_path" value="$(find-pkg-share maya_description)/urdf/maya_description.urdf.xacro" />
+    <let name="rviz_path" value="$(find-pkg-share maya_description)/rviz/maya_description.rviz" />
+
+    <!--False = Ejecutar joint_state | True = No ejecutar Joint_state-->
+    <let name="sim" value="false"/>
+   
+   
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
+        
+        <!--Quitar el clock simulado y usar el del sistema-->
+        <!--param name="use_sim_time" value="true" /-->  
+        <param name="use_sim_time" value="false" />
+    
+    </node>
+
+   
+   
+   
+   
+   
+   
+    <!--Modo HARDWARE-->
+    <group unless="$(var sim)">
+        <node pkg="joint_state_publisher"
+            exec="joint_state_publisher"
+            name="joint_state_publisher"
+            output="screen">
+            <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
+            <param name="use_sim_time" value="false" />
+            <param name="rate" value="30.0" />
+        </node>
+    </group>
+
+
+
+    <!--Modo SIMULACION-->
+
+    <!--include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+        <arg name="gz_args" value="$(var gz_args)" />
+    </include>
+    <node pkg="ros_gz_sim" exec="create"
+          args="-topic robot_description -x $(var spawn_x) -y $(var spawn_y) -z $(var spawn_z) -Y $(var spawn_yaw)" />
+    <node pkg="ros_gz_bridge" exec="parameter_bridge">
+        <param name="config_file" value="$(var gazebo_config_path)" />
+    </node>
+    <node pkg="maya_bringup" exec="scan_frame_relay.py" name="scan_frame_relay" output="screen">
+        <param name="input_topic" value="/scan" />
+        <param name="output_topic" value="/scan_fixed" />
+        <param name="frame_id" value="lidar_link" />
+    </node-->
+
+
+
+
+
+
+
+
+    <node pkg="maya_bringup" exec="sim_covariance_relay.py" name="sim_covariance_relay" output="screen">
+        <param name="odom_input_topic" value="/odom" />
+        <param name="odom_output_topic" value="/odom_with_covariance" />
+        <param name="imu_input_topic" value="/imu" />
+        <param name="imu_output_topic" value="/imu_with_covariance" />
+    </node>
+    <node if="$(var use_depth_scan_pipeline)" pkg="pointcloud_to_laserscan" exec="pointcloud_to_laserscan_node" name="depth_cloud_to_scan" output="screen">
+        <param name="target_frame" value="base_footprint" />
+        <param name="transform_tolerance" value="0.05" />
+        <param name="min_height" value="0.05" />
+        <param name="max_height" value="0.8" />
+        <param name="angle_min" value="-3.14159" />
+        <param name="angle_max" value="3.14159" />
+        <param name="angle_increment" value="0.00872665" />
+        <param name="scan_time" value="0.0167" />
+        <param name="range_min" value="0.05" />
+        <param name="range_max" value="10.0" />
+        <param name="use_inf" value="true" />
+        <remap from="cloud_in" to="/depth_camera/points" />
+        <remap from="scan" to="/scan_depth" />
+    </node>
+    <node if="$(var use_depth_scan_pipeline)" pkg="maya_bringup" exec="scan_merge.py" name="scan_merger" output="screen">
+        <param name="scan_topic_1" value="/scan_fixed" />
+        <param name="scan_topic_2" value="/scan_depth" />
+        <param name="output_topic" value="/scan_merged" />
+        <param name="frame_id" value="base_footprint" />
+    </node>
+    <!-- Optional visual/RGB-D odometry source. It publishes /visual_odom for EKF fusion and does not own TF. -->
+    <node if="$(var use_rtabmap_odom)" pkg="rtabmap_odom" exec="rgbd_odometry" name="rgbd_odometry" output="screen">
+        <param name="use_sim_time" value="false" />
+        <param name="frame_id" value="base_footprint" />
+        <param name="odom_frame_id" value="odom" />
+        <param name="publish_tf" value="false" />
+        <param name="approx_sync" value="true" />
+        <!-- Enable IMU-assisted odometry when available. -->
+        <param name="subscribe_imu" value="true" />
+        <remap from="rgb/image" to="/rgb_camera/image" />
+        <remap from="rgb/camera_info" to="/rgb_camera/camera_info" />
+        <remap from="depth/image" to="/depth_camera/image" />
+        <remap from="depth/camera_info" to="/depth_camera/camera_info" />
+        <remap from="imu" to="/imu" />
+        <remap from="odom" to="/visual_odom" />
+    </node>
+    <node pkg="robot_localization" exec="ekf_node" name="ekf_filter_node" output="screen">
+        <param from="$(find-pkg-share maya_bringup)/config/ekf.yaml" />
+        <param name="odom0" value="/odom_with_covariance" />
+        <param name="imu0" value="/imu_with_covariance" />
+        <param name="use_sim_time" value="false" />
+    </node>
+    <include if="$(var use_nav2)" file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py">
+        <arg name="use_sim_time" value="false" />
+        <arg name="slam" value="True" />
+        <arg name="autostart" value="True" />
+        <arg name="use_composition" value="False" />
+        <arg name="params_file" value="$(find-pkg-share maya_bringup)/config/nav2_params.yaml" />
+    </include>
+    <node if="$(var rviz)" pkg="rviz2" exec="rviz2" args="-d $(var rviz_path)" />
+</launch>

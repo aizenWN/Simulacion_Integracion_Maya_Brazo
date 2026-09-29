@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Global materials shared by Maya -->
+  <material name="maya_body">
+    <color rgba="0.0 0.38 0.45 1.0"/>
+  </material>
+
+  <material name="maya_wheel">
+    <color rgba="0.05 0.05 0.05 1.0"/>
+  </material>
+
+  <!-- Mesh scale factor for all STL geometry.
+       If meshes are exported in millimeters set mesh_scale to 0.001 -->
+  <xacro:property name="mesh_scale" value="1.0"/>
+
+  <!-- Vertical offset from base_footprint to base_link origin.
+       base_footprint is on ground plane -->
+  <xacro:property name="footprint_z" value="0.44"/>
+
+  <!-- Base link visual and collision mesh offset relative to base_link frame.
+       This compensates CAD export so robot origin is centered for navigation -->
+  <xacro:property name="base_link_mesh_offset_xyz" value="0.0705 -0.16 0.01"/>
+  <xacro:property name="base_link_mesh_offset_rpy" value="0 0 0"/>
+
+  <!-- Base link inertial parameters in base_link frame (from CAD) -->
+  <xacro:property name="base_inertial_xyz" value="0 0 0.13"/>
+  <xacro:property name="base_inertial_rpy" value="0 0 0"/>
+  <xacro:property name="base_inertia_ixx" value="0.11833"/>
+  <xacro:property name="base_inertia_ixy" value="-1.7951E-05"/>
+  <xacro:property name="base_inertia_ixz" value="-7.1707E-06"/>
+  <xacro:property name="base_inertia_iyy" value="0.20257"/>
+  <xacro:property name="base_inertia_iyz" value="-0.0006245"/>
+  <xacro:property name="base_inertia_izz" value="0.13032"/>
+
+  <!-- Total mass of the base assembly (chassis, according to your CAD) -->
+  <xacro:property name="base_mass" value="25"/>
+
+  <!-- ============================================================= -->
+  <!-- Geometric + inertial convenience properties and macros        -->
+  <!-- ============================================================= -->
+
+  <!-- Approximate base geometry (meters) – tune these to match the real rover.
+       length = X, width = Y, height = Z in the base_link frame -->
+  <xacro:property name="base_length" value="0.80"/>
+  <xacro:property name="base_width"  value="0.70"/>
+  <xacro:property name="base_height" value="0.30"/>
+
+  <!-- Wheel geometry (using drive_wheel_radius defined below) -->
+  <xacro:property name="wheel_radius" value="${drive_wheel_radius}"/>
+  <!-- Collision wheel width kept narrow for stable skid-steer simulation.
+       Matching the full STL width over-constrains lateral scrub and can make
+       pure angular commands push the rover forward/back instead of yawing. -->
+  <xacro:property name="wheel_width" value="0.05"/>
+
+  <!-- Wheel mass (per wheel) – from CAD -->
+  <xacro:property name="wheel_mass" value="1.4536"/>
+  <xacro:property name="wheel_inertial_xyz" value="1.0324E-05 1.5584E-05 -0.15844"/>
+  <xacro:property name="wheel_inertial_rpy" value="0 0 0"/>
+  <xacro:property name="wheel_inertia_ixx" value="0.014265"/>
+  <xacro:property name="wheel_inertia_ixy" value="-1.2792E-07"/>
+  <xacro:property name="wheel_inertia_ixz" value="-1.0752E-07"/>
+  <xacro:property name="wheel_inertia_iyy" value="0.014264"/>
+  <xacro:property name="wheel_inertia_iyz" value="-9.6151E-08"/>
+  <xacro:property name="wheel_inertia_izz" value="0.025537"/>
+
+  <!--Origen de la conexion Maya|Brazo-->
+  <xacro:property name="maya_arm_mount_xyz" value="0 -0.386 0.052"/>
+  <xacro:property name="maya_arm_mount_rpy" value="0 0 0"/>
+
+  <!--Origen de las paredes del brazo-->
+  <xacro:property name="arm_wall_right_xyz" value="0.23 -0.386 0.13"/>
+  <xacro:property name="arm_wall_right_rpy" value="0 0 0"/>
+
+  <xacro:property name="arm_wall_left_xyz" value="-0.23 -0.386 0.13"/>
+  <xacro:property name="arm_wall_left_rpy" value="0 0 0"/>
+
+  <!-- Box inertia macro for a box centered at the link frame,
+       aligned with axes. Arguments:
+       m is mass, w is width (Y), d is length (X), h is height (Z) -->
+  <xacro:macro name="box_inertia" params="m w d h xyz:='0 0 0' rpy:='0 0 0'">
+    <inertial>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(m/12.0) * (h*h + d*d)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(m/12.0) * (w*w + d*d)}"
+        iyz="0.0"
+        izz="${(m/12.0) * (w*w + h*h)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Cylinder inertia macro for a cylinder aligned with Z-axis,
+       centered at the link frame.
+       m is mass, r is radius, h is length along Z.
+       xyz / rpy let you shift/rotate the inertial origin. -->
+  <xacro:macro name="cylinder_inertia" params="m r h xyz:='0 0 0' rpy:='0 0 0'">
+    <inertial>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(m/12.0) * (3.0*r*r + h*h)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(m/12.0) * (3.0*r*r + h*h)}"
+        iyz="0.0"
+        izz="${(m/2.0) * (r*r)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Sphere inertia macro for a solid sphere centered at the link frame.
+       Currently unused, but kept for future caster wheels. -->
+  <xacro:macro name="sphere_inertia" params="m r">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(2.0/5.0) * m * (r*r)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(2.0/5.0) * m * (r*r)}"
+        iyz="0.0"
+        izz="${(2.0/5.0) * m * (r*r)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Default wheel spin axes.
+       Right wheels keep the mirrored sign required by the current Maya CAD and
+       Gazebo drive setup. Normalizing the sign regressed command mapping. -->
+  <xacro:property name="wheel_axis_left"  value="0 0 1"/>
+  <xacro:property name="wheel_axis_right" value="0 0 -1"/>
+
+  <!-- Helper constant for quarter turn about Z -->
+  <xacro:property name="half_pi" value="${pi / 2.0}"/>
+
+  <!-- Gazebo drive parameters for skid steer model.
+       wheel_separation is lateral distance between left/right wheel centers.
+       drive_wheel_radius is effective rolling radius. -->
+  <xacro:property name="drive_wheel_separation" value="1.09449"/>
+  <xacro:property name="drive_wheel_radius"     value="0.1636"/>
+
+<!-- Macro para las paredes del brazo -->
+  <xacro:macro name="arm_wall" params="link_name joint_name xyz rpy">
+    <link name="${link_name}">
+       <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <box size="0.06 0.32 0.16"/>
+          </geometry>
+          <material name="maya_body"/>
+        </visual>
+    </link>
+
+    <joint name="${joint_name}" type="fixed">
+       <parent link="base_link"/>
+       <child link="${link_name}"/>
+       <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--Paredes de Brazo-->
+
+<!--Pared Derecha-->
+<xacro:arm_wall
+    link_name="arm_wall_right"
+    joint_name="arm_wall_right_joint"
+    xyz="${arm_wall_right_xyz}"
+    rpy="${arm_wall_right_rpy}"/>
+    
+<!--Pared Izquieda-->
+<xacro:arm_wall
+    link_name="arm_wall_left"
+    joint_name="arm_wall_left_joint"
+    xyz="${arm_wall_left_xyz}"
+    rpy="${arm_wall_left_rpy}"/>
+
+<!--Fixed conexion Maya|Brazo-->
+    <link name="maya_arm_mount">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.5 0.32 0.005"/>
+            </geometry>
+            <material name="maya_body"/>
+        </visual>
+    </link>
+
+    <joint name="maya_arm_mount_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="maya_arm_mount"/>
+        <origin xyz="${maya_arm_mount_xyz}" rpy="${maya_arm_mount_rpy}"/>
+    </joint>
+
+
+
+</robot>

@@ -1,0 +1,73 @@
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: true
+    publish_acceleration: false
+    publish_tf: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint
+    world_frame: odom
+
+    # Primary local odometry prior.
+    # In SIM this is Gazebo DiffDrive odom; on HW this should be wheel odom.
+    # Keep raw odom yaw pose out of the planar EKF: turning diagnostics show it is
+    # the weakest source, so odom contributes x/y and velocity while IMU carries heading.
+    odom0: /odom
+    odom0_config: [true,  true,  false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom0_differential: false
+    odom0_relative: false
+
+    # IMU contributes heading and yaw rate only in the current planar EKF.
+    # Optional VIO/LIO overlays can add odom1/odom2 in separate files.
+    imu0: /imu
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    imu0_remove_gravitational_acceleration: true
+    imu0_differential: false
+    imu0_relative: true
+
+    # Tighter covariances to reduce drift while trusting IMU yaw.
+    process_noise_covariance: [
+      0.02, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.02, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.05, 0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6
+    ]
+
+    initial_estimate_covariance: [
+      1e-3, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  1e-3, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  1e-3, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e-2, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e-2, 0.0,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6,  0.0,
+      0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1e6
+    ]
