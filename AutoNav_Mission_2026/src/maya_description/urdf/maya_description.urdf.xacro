@@ -10,5 +10,11 @@
   <xacro:include filename="$(find maya_description)/urdf/mobile_base_gazebo.xacro"/>
   <xacro:include filename="$(find maya_description)/urdf/sensors.xacro"/>
   <xacro:include filename="$(find maya_description)/urdf/maya_arm_mount.xacro"/>
+  <xacro:include filename="$(find maya_description)/urdf/maya_arm.xacro"/>
+  <xacro:maya_arm parent="maya_arm_mount">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:maya_arm>
+
+  
 
 </robot>

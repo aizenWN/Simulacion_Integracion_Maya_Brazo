@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="maya_arm" params="parent *origin">
+    
+    <!-- Joint dinámico para atornillar el brazo al Rover -->
+    <joint name="arm_mount_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="arm_base_link" />
+    </joint>
+
+    <link name="arm_base_link">
+      <inertial>
+        <origin xyz="1.281E-06 -0.015414 0.0001483" rpy="0 0 0" />
+        <mass value="0.13795" />
+        <inertia ixx="5.7399E-05" ixy="-2.5472E-09" ixz="1.5566E-09" iyy="9.0274E-05" iyz="3.1683E-07" izz="5.7877E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          
+          <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
+        </geometry>
+        <material name=""><color rgba="0.25098 0.25098 0.25098 1" /></material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="motor_1_link">
+    <inertial>
+      <origin
+        xyz="-0.01826 0.087242 -0.013905"
+        rpy="0 0 0" />
+      <mass
+        value="1.4762" />
+      <inertia
+        ixx="0.0048225"
+        ixy="0.00038805"
+        ixz="0.00046269"
+        iyy="0.0024977"
+        iyz="0.00013488"
+        izz="0.0032284" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_1_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_1_joint"
+    type="revolute">
+    <origin
+      xyz="0 0.01 0"
+      rpy="1.6654 0.083193 2.1147" />
+    <parent
+      link="arm_base_link" />
+    <child
+      link="motor_1_link" />
+    <axis
+      xyz="0.083097 -0.99208 0.094171" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="motor_2_link">
+    <inertial>
+      <origin
+        xyz="0.0051413 0.1381 -0.13076"
+        rpy="0 0 0" />
+      <mass
+        value="0.20302" />
+      <inertia
+        ixx="0.0061213"
+        ixy="-0.00043575"
+        ixz="0.00046701"
+        iyy="0.0029211"
+        iyz="0.0027878"
+        izz="0.0034933" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_2_joint"
+    type="revolute">
+    <origin
+      xyz="-0.008209 0.10641 -0.012659"
+      rpy="-0.66405 -0.12773 -0.14792" />
+    <parent
+      link="motor_1_link" />
+    <child
+      link="motor_2_link" />
+    <axis
+      xyz="0.95882 0.10535 0.26374" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="motor_3_link">
+    <inertial>
+      <origin
+        xyz="0.040888 -0.015104 -0.21939"
+        rpy="0 0 0" />
+      <mass
+        value="2.5829" />
+      <inertia
+        ixx="0.010998"
+        ixy="0.00033165"
+        ixz="0.0021115"
+        iyy="0.0090948"
+        iyz="-0.00019922"
+        izz="0.0041817" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_3_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_3_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_3_joint"
+    type="revolute">
+    <origin
+      xyz="0.043255 0.30932 -0.2808"
+      rpy="-3.0668 -0.54323 0.19802" />
+    <parent
+      link="motor_2_link" />
+    <child
+      link="motor_3_link" />
+    <axis
+      xyz="0.95882 0.10535 0.26374" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="motor_4_link">
+    <inertial>
+      <origin
+        xyz="0.00645 -0.1166 0.11285"
+        rpy="0 0 0" />
+      <mass
+        value="0.39644" />
+      <inertia
+        ixx="0.00054582"
+        ixy="4.8132E-06"
+        ixz="2.0975E-05"
+        iyy="0.0004661"
+        iyz="5.3813E-05"
+        izz="0.00047091" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_4_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_4_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_4_joint"
+    type="revolute">
+    <origin
+      xyz="0.12051 -0.026384 -0.42756"
+      rpy="0.79738 0.53316 -2.9125" />
+    <parent
+      link="motor_3_link" />
+    <child
+      link="motor_4_link" />
+    <axis
+      xyz="0.95882 0.10535 0.26374" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="motor_5_link">
+    <inertial>
+      <origin
+        xyz="-0.0065032 -0.048969 0.043567"
+        rpy="0 0 0" />
+      <mass
+        value="0.64924" />
+      <inertia
+        ixx="0.00090654"
+        ixy="6.0123E-06"
+        ixz="1.1939E-05"
+        iyy="0.00082264"
+        iyz="9.507E-05"
+        izz="0.00080936" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_5_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://maya_description/meshes/motor_5_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_5_joint"
+    type="revolute">
+    <origin
+      xyz="0.00064865 -0.15464 0.1444"
+      rpy="-0.035391 0.45461 -0.4167" />
+    <parent
+      link="motor_4_link" />
+    <child
+      link="motor_5_link" />
+    <axis
+      xyz="0.099071 0.74625 -0.65825" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+
+  </xacro:macro>
+
+</robot>
