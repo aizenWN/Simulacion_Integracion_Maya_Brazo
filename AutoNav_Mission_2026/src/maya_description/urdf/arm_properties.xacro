@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--Origen del Frame para atornillar el brazo en Maya-->
+  <xacro:property name="arm_mount_xyz" value="0 0 0.04"/>
+  <xacro:property name="arm_mount_rpy" value="0 0 0"/>
+
+
+</robot>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot name="maya"
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find maya_description)/urdf/maya_description.urdf.xacro"/>
+  <xacro:include filename="$(find maya_description)/urdf/arm_description.urdf.xacro"/>
+
+  <xacro:include filename="$(find maya_description)/urdf/maya_arm_mount.xacro"/>
+
+</robot>

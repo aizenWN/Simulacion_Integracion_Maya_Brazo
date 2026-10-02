@@ -3,21 +3,21 @@
 
 <!--Paredes de Brazo-->
 
-<!--Pared Derecha-->
-<xacro:arm_wall
-    link_name="arm_wall_right"
-    joint_name="arm_wall_right_joint"
-    xyz="${arm_wall_right_xyz}"
-    rpy="${arm_wall_right_rpy}"/>
-    
-<!--Pared Izquieda-->
-<xacro:arm_wall
-    link_name="arm_wall_left"
-    joint_name="arm_wall_left_joint"
-    xyz="${arm_wall_left_xyz}"
-    rpy="${arm_wall_left_rpy}"/>
+    <!--Pared Derecha-->
+    <xacro:arm_wall
+        link_name="arm_wall_right"
+        joint_name="arm_wall_right_joint"
+        xyz="${arm_wall_right_xyz}"
+        rpy="${arm_wall_right_rpy}"/>
+        
+    <!--Pared Izquieda-->
+    <xacro:arm_wall
+        link_name="arm_wall_left"
+        joint_name="arm_wall_left_joint"
+        xyz="${arm_wall_left_xyz}"
+        rpy="${arm_wall_left_rpy}"/>
 
-<!--Fixed conexion Maya|Brazo-->
+    <!--Fixed conexion Maya|Brazo-->
     <link name="maya_arm_mount">
         <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -28,12 +28,18 @@
         </visual>
     </link>
 
+<!-- Base para brazo y laboratorio en Maya -->
     <joint name="maya_arm_mount_joint" type="fixed">
         <parent link="base_link"/>
         <child link="maya_arm_mount"/>
         <origin xyz="${maya_arm_mount_xyz}" rpy="${maya_arm_mount_rpy}"/>
     </joint>
 
-
+<!-- Joint para atornillar el brazo a Maya -->
+    <joint name="arm_mount_joint" type="fixed">
+      <parent link="maya_arm_mount" />
+      <child link="arm_base_link" />
+      <origin xyz="${arm_mount_xyz}" rpy="${arm_mount_rpy}"/>
+    </joint>
 
 </robot>

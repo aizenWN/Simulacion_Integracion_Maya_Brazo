@@ -64,7 +64,7 @@
   <xacro:property name="wheel_inertia_iyz" value="-9.6151E-08"/>
   <xacro:property name="wheel_inertia_izz" value="0.025537"/>
 
-  <!--Origen de la conexion Maya|Brazo-->
+  <!--Origen de la base Maya|Brazo-->
   <xacro:property name="maya_arm_mount_xyz" value="0 -0.386 0.052"/>
   <xacro:property name="maya_arm_mount_rpy" value="0 0 0"/>
 
@@ -141,7 +141,7 @@
   <xacro:property name="drive_wheel_separation" value="1.09449"/>
   <xacro:property name="drive_wheel_radius"     value="0.1636"/>
 
-<!-- Macro para las paredes del brazo -->
+<!-- Macro para las paredes del maya | brazo -->
   <xacro:macro name="arm_wall" params="link_name joint_name xyz rpy">
     <link name="${link_name}">
        <visual>
@@ -159,5 +159,6 @@
        <origin xyz="${xyz}" rpy="${rpy}"/>
     </joint>
   </xacro:macro>
+  
 
 </robot>

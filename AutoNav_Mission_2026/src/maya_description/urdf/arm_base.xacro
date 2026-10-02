@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="maya_arm" params="parent *origin">
-    
-    <!-- Joint dinámico para atornillar el brazo al Rover -->
-    <joint name="arm_mount_joint" type="fixed">
-      <xacro:insert_block name="origin" />
-      <parent link="${parent}" />
-      <child link="arm_base_link" />
-    </joint>
+  <link name="arm_base_link">
+    <inertial>
+      <origin xyz="1.281E-06 -0.015414 0.0001483" rpy="0 0 0" />
+      <mass value="0.13795" />
+      <inertia ixx="5.7399E-05" ixy="-2.5472E-09" ixz="1.5566E-09" iyy="9.0274E-05" iyz="3.1683E-07" izz="5.7877E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        
+        <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
+      </geometry>
+      <material name=""><color rgba="0.25098 0.25098 0.25098 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
 
-    <link name="arm_base_link">
-      <inertial>
-        <origin xyz="1.281E-06 -0.015414 0.0001483" rpy="0 0 0" />
-        <mass value="0.13795" />
-        <inertia ixx="5.7399E-05" ixy="-2.5472E-09" ixz="1.5566E-09" iyy="9.0274E-05" iyz="3.1683E-07" izz="5.7877E-05" />
-      </inertial>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          
-          <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
-        </geometry>
-        <material name=""><color rgba="0.25098 0.25098 0.25098 1" /></material>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
-        </geometry>
-      </collision>
-    </link>
-
-    <link name="motor_1_link">
+  <link name="motor_1_link">
     <inertial>
       <origin
         xyz="-0.01826 0.087242 -0.013905"
@@ -322,6 +313,5 @@
       velocity="0" />
   </joint>
 
-  </xacro:macro>
 
 </robot>

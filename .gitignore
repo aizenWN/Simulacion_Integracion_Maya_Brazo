@@ -1,0 +1,9 @@
+# Carpetas de compilacion de ROS2 (Pesadas y locales)
+AutoNav_Mission_2026/build/
+AutoNav_Mission_2026/install/
+AutoNav_Mission_2026/log/
+
+# Archivos de cache e historial de VS Code (Evita el bloqueo de GitHub)
+**/.vscode/
+**/*.db
+.DS_Store

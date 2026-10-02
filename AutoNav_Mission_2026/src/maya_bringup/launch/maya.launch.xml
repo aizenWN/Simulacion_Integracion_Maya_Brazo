@@ -21,7 +21,7 @@
     <!-- Optional RTAB-Map RGB-D odometry publisher for /visual_odom (used by EKF odom1). -->
     <arg name="use_rtabmap_odom" default="false" />
     <let name="gazebo_config_path" value="$(find-pkg-share maya_bringup)/config/gazebo_bridge.yaml" />
-    <let name="urdf_path" value="$(find-pkg-share maya_description)/urdf/maya_description.urdf.xacro" />
+    <let name="urdf_path" value="$(find-pkg-share maya_description)/urdf/global_description.urdf.xacro" />
     <let name="rviz_path" value="$(find-pkg-share maya_description)/rviz/maya_description.rviz" />
 
     <!--False = Ejecutar joint_state | True = No ejecutar Joint_state-->
