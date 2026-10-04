@@ -1,9 +1,129 @@
-# Carpetas de compilacion de ROS2 (Pesadas y locales)
-AutoNav_Mission_2026/build/
-AutoNav_Mission_2026/install/
-AutoNav_Mission_2026/log/
-
-# Archivos de cache e historial de VS Code (Evita el bloqueo de GitHub)
-**/.vscode/
-**/*.db
+########################
+# OS / Editor cruft
+########################
+# macOS
 .DS_Store
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+########################
+# Python
+########################
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+.python-env/
+
+# Packaging / tooling
+build/                # (Python package builds, not ROS build tree)
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Testing / coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+########################
+# C / C++ artifacts
+########################
+# Object / libraries / binaries
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Dependency / intermediate files
+*.d
+*.gcda
+*.gcno
+*.gcov
+
+########################
+# CMake / generic build trees
+########################
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+
+# Local build directories (non-ROS specific)
+build-*/
+_build/
+out/
+bin/
+lib/
+
+########################
+# ROS 2 / colcon workspaces
+########################
+# Standard colcon workspace dirs
+build/
+install/
+log/
+
+# Local ROS config / caches
+.ros/
+
+# rosbag2 (SQLite) recordings – keep them out of git
+*.db3
+*.db3-journal
+
+########################
+# Gazebo / Ignition sim
+########################
+# User-level caches (normally in $HOME, but ignore if they appear here)
+.gazebo/
+.ignition/
+
+# Gazebo logs if written into the repo tree
+gazebo.log
+gzserver.log
+gzclient.log
+
+########################
+# Misc project-level
+########################
+# Logs produced during runs
+*.log
+
+# Temporary data dumps / scratch
+tmp/
+temp/
+.codex
+*.bak
+*.old
+*.orig
