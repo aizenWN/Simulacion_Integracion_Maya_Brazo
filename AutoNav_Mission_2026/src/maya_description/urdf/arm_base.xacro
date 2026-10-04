@@ -10,7 +10,6 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        
         <mesh filename="package://maya_description/meshes/base_link_arm.STL" />
       </geometry>
       <material name=""><color rgba="0.25098 0.25098 0.25098 1" /></material>
@@ -62,11 +61,12 @@
       </geometry>
     </collision>
   </link>
+
   <joint
     name="motor_1_joint"
     type="revolute">
     <origin
-      xyz="0 0.01 0"
+      xyz="0.01 0.01 0"
       rpy="1.6654 0.083193 2.1147" />
     <parent
       link="arm_base_link" />
@@ -75,11 +75,12 @@
     <axis
       xyz="0.083097 -0.99208 0.094171" />
     <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      lower="-3.14"
+      upper="3.14"
+      effort="10"
+      velocity="1" />
   </joint>
+
   <link
     name="motor_2_link">
     <inertial>
@@ -120,6 +121,7 @@
       </geometry>
     </collision>
   </link>
+
   <joint
     name="motor_2_joint"
     type="revolute">
@@ -133,11 +135,12 @@
     <axis
       xyz="0.95882 0.10535 0.26374" />
     <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      lower="-1.57"
+      upper="1.57"
+      effort="10"
+      velocity="1" />
   </joint>
+
   <link
     name="motor_3_link">
     <inertial>
@@ -178,6 +181,7 @@
       </geometry>
     </collision>
   </link>
+
   <joint
     name="motor_3_joint"
     type="revolute">
@@ -191,11 +195,12 @@
     <axis
       xyz="0.95882 0.10535 0.26374" />
     <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      lower="-2.09"
+      upper="2.09"
+      effort="10"
+      velocity="1" />
   </joint>
+
   <link
     name="motor_4_link">
     <inertial>
@@ -236,6 +241,7 @@
       </geometry>
     </collision>
   </link>
+
   <joint
     name="motor_4_joint"
     type="revolute">
@@ -249,11 +255,12 @@
     <axis
       xyz="0.95882 0.10535 0.26374" />
     <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      lower="-2.62"
+      upper="2.62"
+      effort="10"
+      velocity="1" />
   </joint>
+
   <link
     name="motor_5_link">
     <inertial>
@@ -294,6 +301,7 @@
       </geometry>
     </collision>
   </link>
+
   <joint
     name="motor_5_joint"
     type="revolute">
@@ -307,10 +315,10 @@
     <axis
       xyz="0.099071 0.74625 -0.65825" />
     <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      lower="-3.14"
+      upper="3.14"
+      effort="10"
+      velocity="1" />
   </joint>
 
 

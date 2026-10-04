@@ -10,6 +10,10 @@
     <color rgba="0.05 0.05 0.05 1.0"/>
   </material>
 
+  <material name="sensors">
+    <color rgba="0.2 0 0.2 1"/>
+  </material>
+
   <!-- Mesh scale factor for all STL geometry.
        If meshes are exported in millimeters set mesh_scale to 0.001 -->
   <xacro:property name="mesh_scale" value="1.0"/>
@@ -64,7 +68,7 @@
   <xacro:property name="wheel_inertia_iyz" value="-9.6151E-08"/>
   <xacro:property name="wheel_inertia_izz" value="0.025537"/>
 
-  <!--Origen de la base Maya|Brazo-->
+  <!--Origen de la base Maya | Brazo-->
   <xacro:property name="maya_arm_mount_xyz" value="0 -0.386 0.052"/>
   <xacro:property name="maya_arm_mount_rpy" value="0 0 0"/>
 

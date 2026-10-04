@@ -44,7 +44,7 @@
    
    
     <!--Modo HARDWARE-->
-    <group unless="$(var sim)">
+    <!--group unless="$(var sim)">
         <node pkg="joint_state_publisher"
             exec="joint_state_publisher"
             name="joint_state_publisher"
@@ -53,9 +53,21 @@
             <param name="use_sim_time" value="false" />
             <param name="rate" value="30.0" />
         </node>
+    </group-->
+
+    <!--Abrir GUI de joint state publisher-->
+    <group unless="$(var sim)">
+        <node pkg="joint_state_publisher_gui"
+            exec="joint_state_publisher_gui"
+            name="joint_state_publisher_gui"
+            output="screen">
+            <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
+            <param name="use_sim_time" value="false" />
+        </node>
     </group>
 
 
+    
 
     <!--Modo SIMULACION-->
 
