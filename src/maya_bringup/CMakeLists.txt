@@ -11,6 +11,7 @@ install(
     DESTINATION share/${PROJECT_NAME}/
 )
 install(PROGRAMS
+    scripts/process_joint_state.py
     scripts/scan_frame_relay.py
     scripts/scan_merge.py
     scripts/sim_covariance_relay.py

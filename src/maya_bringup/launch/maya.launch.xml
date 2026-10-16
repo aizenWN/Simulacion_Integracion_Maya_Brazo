@@ -37,14 +37,27 @@
     
     </node>
 
+     <!--BRAZO-->
+
+    <node pkg="maya_bringup" exec="process_joint_state.py" name="process_joint_state" output="screen">
+        <param name="use_sim_time" value="false" />
+    </node>
+   <group unless="$(var sim)">
+        <node pkg="joint_state_publisher"
+            exec="joint_state_publisher"
+            name="joint_state_publisher"
+            output="screen">
+            <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
+            <param name="use_sim_time" value="false" />
+            <param name="rate" value="30.0" />
+            <param name="source_list" value="['/joint_states_unwrapped']" />
+        </node>
+    </group>
    
-   
-   
-   
-   
-   
+    
     <!--Modo HARDWARE-->
-    <!--group unless="$(var sim)">
+    <!--
+    <group unless="$(var sim)">
         <node pkg="joint_state_publisher"
             exec="joint_state_publisher"
             name="joint_state_publisher"
@@ -53,9 +66,11 @@
             <param name="use_sim_time" value="false" />
             <param name="rate" value="30.0" />
         </node>
-    </group-->
+    </group>
+    -->
 
     <!--Abrir GUI de joint state publisher-->
+    <!--
     <group unless="$(var sim)">
         <node pkg="joint_state_publisher_gui"
             exec="joint_state_publisher_gui"
@@ -64,10 +79,8 @@
             <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
             <param name="use_sim_time" value="false" />
         </node>
-    </group>
+    </group>-->
 
-
-    
 
     <!--Modo SIMULACION-->
 
@@ -84,12 +97,6 @@
         <param name="output_topic" value="/scan_fixed" />
         <param name="frame_id" value="lidar_link" />
     </node-->
-
-
-
-
-
-
 
 
     <node pkg="maya_bringup" exec="sim_covariance_relay.py" name="sim_covariance_relay" output="screen">

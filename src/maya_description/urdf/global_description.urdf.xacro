@@ -4,7 +4,6 @@
 
   <xacro:include filename="$(find maya_description)/urdf/maya_description.urdf.xacro"/>
   <xacro:include filename="$(find maya_description)/urdf/arm_description.urdf.xacro"/>
-
   <xacro:include filename="$(find maya_description)/urdf/maya_arm_mount.xacro"/>
 
 </robot>
